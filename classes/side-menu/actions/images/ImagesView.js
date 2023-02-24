@@ -13,7 +13,7 @@ class ImagesView extends EventEmitter {
 
   generateDOM = () => {
     const container = this.imagesViewDOM.generateElements();
-    container.querySelector('h3').innerHTML = 'Zdjęcia';
+    container.querySelector('h3').innerHTML = '图片';
     this.container = container;
   }
 
