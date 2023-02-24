@@ -9,7 +9,7 @@ class StickersViewDOM {
     getStringElements = () => {
       const stringElements = `
           <div class="action-stickers-container">
-              <h3>Naklejki</h3>
+              <h3>贴图</h3>
               <div class="action-stickers"></div>
           </div>
           `;
