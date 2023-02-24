@@ -15,7 +15,7 @@ class StickersView extends EventEmitter {
 
   generateDOM = () => {
     const container = this.stickersViewDOM.generateElements();
-    container.querySelector('h3').innerHTML = 'Naklejki';
+    container.querySelector('h3').innerHTML = '贴图';
     this.container = container;
   }
 
