@@ -15,7 +15,7 @@ class BackgroundView extends EventEmitter {
       
       generateDOM = () => {
         const container = this.backgroundViewDOM.generateElements();
-        container.querySelector('h3').innerHTML = 'Tło';
+        container.querySelector('h3').innerHTML = '背景';
         this.container = container;
       }
   
