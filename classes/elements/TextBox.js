@@ -219,15 +219,15 @@ class TextBox extends Element2D {
         <div class="textbox-container textbox-mode">
             <a href="#" target="_blank" class="url-text"></a>
             <input class="textbox" value="asd" type="text" />
-            <input class="url-target" placeholder="np. http://google.com" value="" type="text" />
+            <input class="url-target" placeholder="比如 http://baidu.com" value="" type="text" />
 
             <div class="url-actions">
                 <button class="dismiss-url-mode">
-                    <p>Anuluj</p>
+                    <p>取消</p>
                     <i class="material-icons-round">close</i>
                 </button>
                 <button class="confirm-url-mode">
-                    <p>Zatwierdź</p>
+                    <p>确定</p>
                     <i class="enable-url-mode material-icons-round">check</i>
                 </button>
             </div>

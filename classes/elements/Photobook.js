@@ -1,7 +1,7 @@
 class Photobook extends EventEmitter {
   constructor(width, height) {
     super();
-    this.name = "Nowy projekt";
+    this.name = "新建相册";
     this.pages = [];
     this.element = document.createElement('main');
     this.element.id = 'view';
@@ -21,7 +21,7 @@ class Photobook extends EventEmitter {
   }
 
   set name(value) {
-    this.Name = value !== `` ? value : `Nowy projekt`;
+    this.Name = value !== `` ? value : `新建相册`;
   }
 
   get width() {

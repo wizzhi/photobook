@@ -7,7 +7,7 @@ const initializePhotobook = () => {
 
   projectNameInput.addEventListener(`change`, () => {
     if (projectNameInput.value === ``) {
-      projectNameInput.value = `Nowy projekt`;
+      projectNameInput.value = `我的新相册`;
     }
 
     photobook.name = projectNameInput.value;
