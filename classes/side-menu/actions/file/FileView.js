@@ -47,7 +47,7 @@ class FileView extends EventEmitter {
           <svg class="option-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M-74 29h48v48h-48V29zM0 0h24v24H0V0zm0 0h24v24H0V0z"/><path d="M13 12h7v1.5h-7zm0-2.5h7V11h-7zm0 5h7V16h-7zM21 4H3c-1.1 0-2 .9-2 2v13c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 15h-9V6h9v13z"/></svg>
           </div>
           <div class="option-text-container">
-            <p>导出PPTX</p>
+            <p>导出 PPT</p>
           </div>
         </div>
         <div class="option-container add-page">
@@ -55,7 +55,7 @@ class FileView extends EventEmitter {
         <svg class="option-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 14h-3v3h-2v-3H8v-2h3v-3h2v3h3v2zm-3-7V3.5L18.5 9H13z"/></svg>
         </div>
         <div class="option-text-container">
-          <p>增加一页</p>
+          <p>新加一页</p>
         </div>
         </div>
         <div class="option-container delete-page">
@@ -63,7 +63,7 @@ class FileView extends EventEmitter {
             <svg class="option-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
           </div>
           <div class="option-text-container">
-            <p>删除一页</p>
+            <p>删去这页</p>
           </div>
         </div>
     </div>`;
