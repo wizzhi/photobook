@@ -24,6 +24,11 @@ const initializePhotobook = () => {
         break;
       }
 
+      case 'wizard': {
+        photoImportWizard();
+        break;
+      }
+
       case 'pdf': {
         photobook.exportToPDF();
         break;
@@ -100,6 +105,27 @@ function showNewProjectDialog() {
   const container = document.querySelector(`div.container`);
   container.appendChild(prompt.element);
 }
+
+function photoImportWizard() {
+  const container = document.querySelector(`div.container`);
+  const input = container.querySelector('.action-file-wizard');
+  input.addEventListener('change', this.photoSelected);
+}
+
+function photoSelected(){
+  const container = document.querySelector(`div.container`);
+  const input = container.querySelector('.action-file-wizard');
+  Array.from(input.files).forEach(file => {
+    const render = new FileReader();
+    render.addEventListener('load', (e)=>{
+      photobook.addImageToActivePage(e.target.result);
+    });
+    render.readAsDataURL(file);
+
+  });
+}
+
+
 // #endregion
 
 dimensions = getMaxDimensions();

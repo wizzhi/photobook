@@ -8,6 +8,7 @@ class FileView extends EventEmitter {
   init = () => {
     this.generateDOM();
     this.addNewProjectButtonListener();
+    this.addImageWizardButtonListener();
     this.addExportPdfButtonListener();
     this.addExportHtmlButtonListener();
     this.addExportPptxButtonListener();
@@ -26,6 +27,16 @@ class FileView extends EventEmitter {
             <p>新建相册</p>
           </div>
         </div>
+        <label for="action-file-wizard" class="option-container image-wizard">
+          <div class="option-svg-container">
+            <svg class="option-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+          </div>
+          <div class="option-text-container">
+            <p>导入照片</p>
+          </div>
+        </label>
+        <input type="file" id="action-file-wizard" class="action-file-wizard" name="action-file-wizard" multiple>
+
         <div class="option-container export-pdf">
           <div class="option-svg-container">
             <svg class="option-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0z"/><path d="M20 2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8.5 7.5c0 .83-.67 1.5-1.5 1.5H9v2H7.5V7H10c.83 0 1.5.67 1.5 1.5v1zm5 2c0 .83-.67 1.5-1.5 1.5h-2.5V7H15c.83 0 1.5.67 1.5 1.5v3zm4-3H19v1h1.5V11H19v2h-1.5V7h3v1.5zM9 9.5h1v-1H9v1zM4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm10 5.5h1v-3h-1v3z"/></svg>
@@ -80,9 +91,17 @@ class FileView extends EventEmitter {
     const newProjectButton = this.container.querySelector('.option-container.new-project');
     newProjectButton.addEventListener('click', this.newProjectClicked);
   }
-
   newProjectClicked = () => {
     this.emit('file', 'new');
+  }
+
+  addImageWizardButtonListener = () => {
+    const newProjectButton = this.container.querySelector('.option-container.image-wizard');
+    newProjectButton.addEventListener('click', this.imageWizardClicked);
+  }
+
+  imageWizardClicked = () => {
+    this.emit('file', 'wizard');
   }
 
   addExportPdfButtonListener = () => {

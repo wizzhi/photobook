@@ -212,6 +212,10 @@ body{
     display: none;
 }
 
+.action-file-wizard {
+    display: none;
+}
+
 .action-file-create-button {
     width: 50px;
     height: 28px;
