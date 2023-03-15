@@ -119,8 +119,36 @@ function photoSelected(){
     const render = new FileReader();
     render.addEventListener('load', (e)=>{
       photobook.addImageToActivePage(e.target.result);
+      photobook.addTextBoxToActivePage()
     });
     render.readAsDataURL(file);
+
+    EXIF.getData(file, function() {
+      t = EXIF.getTag(file,"DateTimeOriginal");
+      if( t && t.length >10 )
+        s = t.substr(0,10);
+      t = EXIF.getTag(file,"Model");
+      t2 = EXIF.getTag(file,"Make");
+      if( t.indexOf(t2) < 0 ){
+        // ignore "NIKON CORPORATION" 
+        if( t2.indexOf("NIKON") < 0 )
+          t = t2 + " " + t;
+      }
+      if( t && t.length >1 )
+        s +=  " ["+t+"]"
+      t = EXIF.getTag(file,"FNumber")
+      if( t )
+        s +=  " F"+t
+      t = EXIF.getTag(file,"ExposureTime")
+      if( t )
+        s +=  " "+t.numerator+"/"+t.denominator+"s"
+      t = EXIF.getTag(file,"ISOSpeedRatings")
+      if( t )
+        s +=  " ISO"+t
+      alert(s)
+      //alert(EXIF.pretty(file));
+    });
+
 
   });
 }

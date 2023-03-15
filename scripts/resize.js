@@ -22,7 +22,8 @@ const resizeElement = (target, hook) => {
         let newWidth;
         let newHeight;
 
-        if (event.shiftKey) {
+        //if (event.shiftKey) {  //for img, try to keep ratio even no shift key pressed
+        if ( target instanceof PhotobookImage ) {
             const ratioWidth = mouseX - mouseX0 + initialWidth;
             const resizeRatio = ratioWidth / initialWidth;
             newWidth = initialWidth * resizeRatio;

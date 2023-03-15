@@ -94,6 +94,8 @@ class Page {
       const height = imageSize.height;
 
       let newImage = new PhotobookImage(base64Image, width, height, zIndex);
+      newImage.left = (this.width - width)/2
+      newImage.top = (this.height - height)/2
       this.images.push(newImage);
       this.element.appendChild(newImage.element);
     }
