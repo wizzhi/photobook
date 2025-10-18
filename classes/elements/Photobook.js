@@ -7,12 +7,23 @@ class Photobook extends EventEmitter {
     this.element.id = 'view';
     this.width = width;
     this.height = height;
-    this.addPage();
-
+    // Create 12 pages by default
+    for (let i = 0; i < 12; i++) {
+      this.addPage();
+    }
     this.activePageIndex = 0;
     this.activePage = this.pages[this.activePageIndex];
     this.activePage.visible = true;
     document.querySelector('.core').appendChild(this.element);
+
+    // add page number display
+    this.pageNumberDisplay = document.createElement('div');
+    this.pageNumberDisplay.className = 'page-number';
+    this.element.appendChild(this.pageNumberDisplay);
+    this.updatePageNumber();
+  }
+  updatePageNumber() {
+    this.pageNumberDisplay.textContent = `第 ${this.activePageIndex + 1} 页，共 ${this.pages.length} 页`;
   }
 
   //#region Getters and setters
@@ -61,6 +72,7 @@ class Photobook extends EventEmitter {
     this.activePage.visible = false;
     this.activePage = this.pages[this.activePageIndex];
     this.activePage.visible = true;
+    this.updatePageNumber();
   }
 
   addPage(backgroundImage) {

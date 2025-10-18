@@ -61,3 +61,12 @@ button.rounded-button:active {
   background-color: #ccc;
 }
 /*# sourceMappingURL=main-page.css.map */
+
+.page-number {
+  position: fixed; /* thre should be better ways to position */
+  width: 100%;
+  text-align: center;
+  margin: 16px 0 8px 0;
+  font-size: 16px;
+  color: #ccc;
+}
