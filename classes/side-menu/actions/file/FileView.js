@@ -8,7 +8,7 @@ class FileView extends EventEmitter {
   init = () => {
     this.generateDOM();
     this.addNewProjectButtonListener();
-    this.addImageWizardButtonListener();
+    // this.addImageWizardButtonListener();
     this.addExportPdfButtonListener();
     this.addExportHtmlButtonListener();
     this.addExportPptxButtonListener();
@@ -27,6 +27,7 @@ class FileView extends EventEmitter {
             <p>新建相册</p>
           </div>
         </div>
+        <!-- 
         <label for="action-file-wizard" class="option-container image-wizard">
           <div class="option-svg-container">
             <svg class="option-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/><path d="M0 0h24v24H0z" fill="none"/></svg>
@@ -36,6 +37,7 @@ class FileView extends EventEmitter {
           </div>
         </label>
         <input type="file" id="action-file-wizard" class="action-file-wizard" name="action-file-wizard" multiple>
+        -->
 
         <div class="option-container export-pdf">
           <div class="option-svg-container">

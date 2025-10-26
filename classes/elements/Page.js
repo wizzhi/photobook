@@ -82,7 +82,8 @@ class Page {
     this.element.appendChild(newTextBox.element);
   }
 
-  addImage(base64Image) {
+  async addImage(img) {
+    const base64Image = img.src
     const image = new Image();
 
     image.onload = async () => {
@@ -100,19 +101,6 @@ class Page {
       this.images.push(newImage);
       this.element.appendChild(newImage.element);
 
-      // get EXIF data and add text box with it
-      const dataURLToArrayBuffer = (dataURL) => {
-        const base64 = dataURL.split(',')[1] || '';
-        const binaryString = atob(base64);
-        const len = binaryString.length;
-        const buffer = new ArrayBuffer(len);
-        const view = new Uint8Array(buffer);
-        for (let i = 0; i < len; i++) {
-          view[i] = binaryString.charCodeAt(i);
-        }
-        return buffer;
-      };
-
       async function getCityName(lat, lon) {
         // Round coordinates to for more effective caching
         // roughtly to 2 decimal places (~1km)
@@ -129,37 +117,34 @@ class Page {
         }
         // Store the Promise in cache
         Page.cityCache[key] = (async () => {
-          const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
-          const response = await fetch(url, { headers: { 'User-Agent': 'YourAppName/1.0' } });
-          const data = await response.json();
-          const city = data.address.city || data.address.town || data.address.village || data.address.hamlet || '';
-          Page.cityCache[key] = city; // Replace Promise with resolved value
-          return city;
+          try {
+            const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+            const response = await fetch(url, { headers: { 'User-Agent': 'YourAppName/1.0' } });
+            const data = await response.json();
+            const city = data.address.city || data.address.town || data.address.village || data.address.hamlet || '';
+            Page.cityCache[key] = city; // Replace Promise with resolved value
+            return city;
+          } catch (err) {
+            console.error('Error fetching city name:', err);
+            Page.cityCache[key] = ''; // Replace Promise with empty string on error
+            return '';
+          }
         })();
         return await Page.cityCache[key];
 
       };
 
+      // get EXIF from DOM and covert to description
       let desc = '';
-      try {
-        if (typeof ExifReader !== 'undefined') {
-          const arrayBuffer = dataURLToArrayBuffer(base64Image);
-          const tags = ExifReader.load(arrayBuffer);
-          const date = tags.DateTimeOriginal?.description || tags.DateTime?.description || '';
-          if (date && date.length > 10)
-            desc = date.substr(0, 10).replace(/:/g, '.');
-          // now get localtion
-          const gpsLat = tags.GPSLatitude;
-          const gpsLon = tags.GPSLongitude;
-          if (gpsLat && gpsLon) {
-            const lat = gpsLat.description;
-            const lon = gpsLon.description;
-            const city = await getCityName(lat,lon);
-            desc = city + " " + desc;
-          }
-        }
-      } catch (err) {
-        console.warn('Failed to parse EXIF:', err);
+      const date = img.getAttribute('exif-date');
+      if ( date ) {
+        desc = date;
+      }
+      const lat = img.getAttribute('exif-lat');
+      const lon = img.getAttribute('exif-lon');
+      if ( lat && lon ) {
+        const city = await getCityName(lat, lon);
+        desc = city + " " + desc;
       }
 
       let newTextBox = new TextBox( newImage.width, 40, zIndex + 1);

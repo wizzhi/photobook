@@ -26,21 +26,75 @@ class ImagesViewDOM {
       return stringElements;
     }
 
-    createImageDOM = (imageBASE) => {
-      const image = this.createImage(imageBASE);
+    createImageDOM = async (imageBASE) => {
+      const image = await this.createImage(imageBASE);
       const imageContainer = this.createImageContainer();
       imageContainer.appendChild(image);
       return imageContainer;
     }
 
-    createImage = (imageBASE) => {
+    createImage = async (imageBASE) => {
       const image = document.createElement('img');
       image.setAttribute('alt', 'image');
-      image.setAttribute('src', imageBASE);
+      
+      // extract EXIF data and save in DOM
+      try {
+        if (typeof ExifReader !== 'undefined') {
+          const arrayBuffer = this.dataURLToArrayBuffer(imageBASE);
+          const tags = ExifReader.load(arrayBuffer);
+          let date = tags.DateTimeOriginal?.description || tags.DateTime?.description || '';
+          if (date && date.length > 10)
+            date = date.substr(0, 10).replace(/:/g, '.');
+          image.setAttribute('exif-date', date);
+
+          // now get localtion
+          const gpsLat = tags.GPSLatitude;
+          if (gpsLat) {
+            image.setAttribute('exif-lat', gpsLat.description);
+          }
+          const gpsLon = tags.GPSLongitude;
+          if (gpsLon) {
+            image.setAttribute('exif-lon', gpsLon.description);
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to parse EXIF:', err);
+      }
       // image.style.width = '100px';
       // image.style.height = '200px';
+
+      // convert to JPEG if it is a HEIC image
+      if (imageBASE.startsWith('data:image/heic') || imageBASE.startsWith('data:image/heif')) {
+        try {
+          const blob = await fetch(imageBASE).then(res => res.blob());
+          const convertedBlob = await heic2any({ blob: blob, toType: "image/jpeg", quality: 0.9 });
+          imageBASE = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(convertedBlob);
+          });
+        } catch (err) {
+          console.error('Failed to convert HEIC image:', err);
+        }
+      }
+      image.setAttribute('src', imageBASE);
+
       return image;
     }
+
+    dataURLToArrayBuffer = (dataURL) => {
+      const base64 = dataURL.split(',')[1] || '';
+      const binaryString = atob(base64);
+      const len = binaryString.length;
+      const buffer = new ArrayBuffer(len);
+      const view = new Uint8Array(buffer);
+      for (let i = 0; i < len; i++) {
+        view[i] = binaryString.charCodeAt(i);
+      }
+      return buffer;
+    };
+
 
     createImageContainer = () => {
       const container = document.createElement('div');

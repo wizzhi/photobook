@@ -31,8 +31,8 @@ class ImagesView extends EventEmitter {
     });
   }
 
-  createImageDOMAndAddItToContainer = (e) => {
-    const image = this.imagesViewDOM.createImageDOM(e.target.result);
+  createImageDOMAndAddItToContainer = async (e) => {
+    const image = await this.imagesViewDOM.createImageDOM(e.target.result);
     const imagesContainer = this.container.querySelector('.action-images');
     const imagesContainerDestroyButton = image.querySelector('.action-image-container-delete');
     imagesContainer.addEventListener('click', this.userClickedOnImage);
@@ -45,7 +45,8 @@ class ImagesView extends EventEmitter {
   }
 
   userClickedOnImage = (e) => {
-    this.emit('imageClicked', e.target.src);
+    //this.emit('imageClicked', e.target.src);
+    this.emit('imageClicked', e.target);
   }
 
   activate = () => {
