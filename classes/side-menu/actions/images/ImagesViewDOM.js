@@ -30,6 +30,15 @@ class ImagesViewDOM {
       const image = await this.createImage(imageBASE);
       const imageContainer = this.createImageContainer();
       imageContainer.appendChild(image);
+      // show date if available
+      const exifDate = image.getAttribute('exif-date');
+      if ( exifDate ) {
+        const dateDiv = document.createElement('div');
+        dateDiv.classList.add('image-note-overlay');
+        dateDiv.style.color = 'white';
+        dateDiv.textContent = exifDate;
+        imageContainer.appendChild(dateDiv);
+      }
       return imageContainer;
     }
 

@@ -22,14 +22,19 @@ class ImagesView extends EventEmitter {
     input.addEventListener('change', this.createImages);
   }
 
-  createImages = () => {
-    const input = this.container.querySelector('.action-images-importer');
-    Array.from(input.files).forEach(file => {
+  createImages = async () => {
+  const input = this.container.querySelector('.action-images-importer');
+  for (const file of Array.from(input.files)) {
+    await new Promise((resolve) => {
       const render = new FileReader();
-      render.addEventListener('load', this.createImageDOMAndAddItToContainer);
+      render.addEventListener('load', async (e) => {
+        await this.createImageDOMAndAddItToContainer(e);
+        // Yield control to the browser so UI updates
+        setTimeout(resolve, 0);
+      });
       render.readAsDataURL(file);
     });
-  }
+  }}
 
   createImageDOMAndAddItToContainer = async (e) => {
     const image = await this.imagesViewDOM.createImageDOM(e.target.result);
@@ -41,6 +46,21 @@ class ImagesView extends EventEmitter {
       event.stopPropagation();
       imagesContainer.removeChild(image);
     });
+    // if it is empty
+    if (!imagesContainer.children.length) {
+      imagesContainer.appendChild(image);
+      return;
+    }
+    let date_current_img = (image.children[1]?.getAttribute('exif-date')) || '';
+    // before first image older than current image
+    for (let child of imagesContainer.children) {
+      let date_child = (child.children[1]?.getAttribute('exif-date')) || '';
+      if ( date_child > date_current_img) {
+        imagesContainer.insertBefore(image, child);
+        return;
+      }
+    }
+    // current image is the oldest, add to the end
     imagesContainer.appendChild(image);
   }
 
