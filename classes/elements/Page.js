@@ -91,13 +91,10 @@ class Page {
       const initialHeight = image.height;
 
       const zIndex = parseInt(this.getMaxZIndex()) + 1;
-      const imageSize = this.getMaxDimensions(initialWidth, initialHeight);
-      const width = imageSize.width;
-      const height = imageSize.height;
-
-      let newImage = new PhotobookImage(base64Image, width, height, zIndex);
-      newImage.left = (this.width - width)/2
-      newImage.top = (this.height - height)/2
+      const imgRect = this.getMaxRect(initialWidth, initialHeight);
+      let newImage = new PhotobookImage(base64Image, imgRect.width, imgRect.height, zIndex);
+      newImage.left = imgRect.left;
+      newImage.top = imgRect.top;
       this.images.push(newImage);
       this.element.appendChild(newImage.element);
 
@@ -150,7 +147,7 @@ class Page {
       let newTextBox = new TextBox( newImage.width, 40, zIndex + 1);
       Object.assign(newTextBox, {
         left: newImage.left,
-        top: newImage.top + height - 30,
+        top: newImage.top + imgRect.height - 30,
         text: desc,
         fontSize: 9,
         textAlign: 'right',
@@ -185,21 +182,84 @@ class Page {
     return maxIndex;
   }
 
-  getMaxDimensions(initialWidth, initialHeight) {
-    const proportions = initialWidth / initialHeight;
-    const widthCheck = this.width - initialWidth;
-    const heightCheck = this.height - initialHeight;
-    let width;
-    let height;
+  getMaxRect(imgWidth, imgHeight) {
+    const proportions = imgWidth / imgHeight;
+    const occupied = this.images.map(img => ({
+      left: img.left,
+      top: img.top,
+      right: img.left + img.width,
+      bottom: img.top + img.height
+    }));
 
-    if (widthCheck < heightCheck) {
-      width = this.width * 0.8;
-      height = width / proportions;
-    } else {
-      height = this.height * 0.8;
-      width = height * proportions;
+    // Collect all possible vertical and horizontal edges
+    const page_margin = 20;
+    const page_L = page_margin,
+          page_R = this.width - page_margin,
+          page_T = page_margin,
+          page_B = this.height - page_margin;
+    let xEdges = [ page_L, page_R];
+    let yEdges = [ page_T, page_B];
+    occupied.forEach(rect => {
+      xEdges.push(rect.left, rect.right);
+      yEdges.push(rect.top, rect.bottom);
+    });
+
+    // Remove duplicates and sort
+    xEdges = [...new Set(xEdges)].sort((a, b) => a - b);
+    yEdges = [...new Set(yEdges)].sort((a, b) => a - b);
+
+    let bestRect = null;
+    let maxArea = 0;
+
+    // Sweep through all possible rectangles
+    for (let i = 0; i < xEdges.length - 1; i++) {
+      for (let j = 0; j < yEdges.length - 1; j++) {
+        const left = xEdges[i];
+        const top = yEdges[j];
+        const right = xEdges[i + 1];
+        const bottom = yEdges[j + 1];
+        let width = right - left;
+        let height = bottom - top;
+
+        // Fit the aspect ratio
+        if (width / height > proportions) {
+          width = height * proportions;
+        } else {
+          height = width / proportions;
+        }
+
+        // Skip too small
+        if (width < 30 || height < 30) continue;
+
+        // Check if rectangle overlaps any occupied
+        const candidate = { left, top, right: left + width, bottom: top + height };
+        const overlaps = occupied.some(rect =>
+          !(candidate.right <= rect.left ||
+            candidate.left >= rect.right ||
+            candidate.bottom <= rect.top ||
+            candidate.top >= rect.bottom)
+        );
+        if (!overlaps) {
+          const area = width * height;
+          if (area > maxArea) {
+            maxArea = area;
+            bestRect = { width, height, left, top };
+          }
+        }
+      }
     }
 
-    return { 'width': width, 'height': height }
-  };
+    // Fallback: center if no space found
+    if (!bestRect) {
+      let width = this.width * 0.8;
+      let height = width / proportions;
+      if (height > this.height * 0.8) {
+        height = this.height * 0.8;
+        width = height * proportions;
+      }
+      return { width, height, left: (this.width-width)/2, top: (this.height - height) / 2 };
+    }
+    return bestRect;
+  }
+
 }

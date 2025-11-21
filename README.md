@@ -6,5 +6,5 @@
 - [x] put meta data(EXIF) as textBox beside photo image
 - [x] support Apple's HEIC photo
 - [x] sort photo list in the menu by date
-- [ ] auto-fit photo to page on image selection
+- [x] auto-fit photo to page on image selection
 - [ ] chceck if possible to export to jpeg files
