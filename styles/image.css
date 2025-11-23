@@ -21,5 +21,7 @@
   background-size: 100% 100%;
   background-repeat: no-repeat;
   cursor: move;
+  padding: 5px;
+  background-clip: content-box; /* Ensures background respects padding */
 }
 /*# sourceMappingURL=image.css.map */
